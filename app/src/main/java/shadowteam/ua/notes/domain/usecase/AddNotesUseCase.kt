@@ -1,0 +1,13 @@
+package shadowteam.ua.notes.domain.usecase
+
+import shadowteam.ua.notes.domain.dataclass.Notes
+import shadowteam.ua.notes.domain.domaininterface.NotesRepository
+import javax.inject.Inject
+
+class AddNotesUseCase @Inject constructor(
+    private val repository: NotesRepository) {
+
+    operator fun invoke(notes: Notes){
+        repository.addNotes(notes)
+    }
+}

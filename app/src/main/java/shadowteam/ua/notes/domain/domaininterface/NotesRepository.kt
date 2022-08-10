@@ -9,9 +9,11 @@ interface NotesRepository {
 
     fun getNotesList():LiveData<List<Notes>>
 
-    fun addNotes(notes: Notes)
+    fun addNotes()
 
     fun deleteNotes(id: Int)
 
-    fun getEditNotes(id: Int)
+    fun getEditNotes(id: Int, title:String, desc:String)
+
+    fun getNotes(id:Int):Notes
 }

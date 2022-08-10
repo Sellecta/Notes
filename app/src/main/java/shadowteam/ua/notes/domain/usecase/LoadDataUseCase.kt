@@ -6,7 +6,5 @@ import javax.inject.Inject
 class LoadDataUseCase @Inject constructor(
     private val repository: NotesRepository
 ) {
-    operator fun invoke(){
-        repository.loadData()
-    }
+    operator fun invoke() = repository.loadData()
 }

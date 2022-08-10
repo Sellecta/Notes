@@ -6,12 +6,13 @@ import dagger.Component
 import shadowteam.ua.notes.di.annotation.AppScope
 import shadowteam.ua.notes.di.module.DataModule
 import shadowteam.ua.notes.di.module.ViewModelModule
+import shadowteam.ua.notes.di.module.WorkerModule
 import shadowteam.ua.notes.presentation.application.NotesApplication
 import shadowteam.ua.notes.presentation.ui.EditNotesFragment
 import shadowteam.ua.notes.presentation.ui.NotesFragment
 
 @AppScope
-@Component(modules = [DataModule::class, ViewModelModule::class])
+@Component(modules = [DataModule::class, ViewModelModule::class, WorkerModule::class])
 interface ApplicationComponent {
 
 

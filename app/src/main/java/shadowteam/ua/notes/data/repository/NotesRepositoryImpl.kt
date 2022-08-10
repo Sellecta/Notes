@@ -3,9 +3,13 @@ package shadowteam.ua.notes.data.repository
 import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
+import androidx.work.ExistingWorkPolicy
+import androidx.work.WorkInfo
+import androidx.work.WorkManager
 import shadowteam.ua.notes.R
 import shadowteam.ua.notes.data.database.dao.NotesDao
 import shadowteam.ua.notes.data.mapper.NotesMapper
+import shadowteam.ua.notes.data.worker.LoadDataWorker
 import shadowteam.ua.notes.domain.dataclass.Notes
 import shadowteam.ua.notes.domain.domaininterface.NotesRepository
 import javax.inject.Inject
@@ -15,9 +19,18 @@ class NotesRepositoryImpl @Inject constructor(
     private val application: Application,
     private val notesDao: NotesDao
 ) : NotesRepository {
-    override fun loadData() {
-        TODO("Not yet implemented")
+
+    override fun loadData(): LiveData<WorkInfo> {
+        val workerRequest = LoadDataWorker.makeRequest()
+        val worker = WorkManager.getInstance(application)
+        worker.enqueueUniqueWork(
+            LoadDataWorker.NAME_WORKER,
+            ExistingWorkPolicy.REPLACE,
+            workerRequest
+        )
+        return worker.getWorkInfoByIdLiveData(workerRequest.id)
     }
+
 
     override fun getNotesList(): LiveData<List<Notes>> {
       return Transformations.map(notesDao.getAllNotes()){ list ->

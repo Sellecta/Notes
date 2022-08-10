@@ -1,17 +1,25 @@
 package shadowteam.ua.notes.presentation.ui
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.work.WorkInfo
+import com.google.android.material.snackbar.Snackbar
 import shadowteam.ua.notes.R
-import shadowteam.ua.notes.databinding.FragmentEditNotesBinding
+import shadowteam.ua.notes.data.database.AppDatabase
+import shadowteam.ua.notes.data.worker.LoadDataWorker
 import shadowteam.ua.notes.databinding.FragmentNotesBinding
 import shadowteam.ua.notes.presentation.application.NotesApplication
 import shadowteam.ua.notes.presentation.ui.adapter.NotesAdapter
@@ -68,11 +76,52 @@ class NotesFragment : Fragment() {
         }
         setSwiperListener()
         setupClickListener()
+        test()
         binding.floatingActionButton.setOnClickListener {
+            if(binding.textViewLoadData.visibility != View.GONE){binding.textViewLoadData.visibility = View.GONE}
             viewModel.addNotes()
+
         }
     }
 
+    private fun test() {
+
+        viewModel.liveWorkerState.observe(viewLifecycleOwner) {
+            val internetStatusError =
+            it.progress.getBoolean(LoadDataWorker.NOT_INTERNET_KEY, false)
+            val sizeLoadData =
+                it.outputData.getInt(LoadDataWorker.LOAD_DATA_KEY, -1)
+            if (it.state == WorkInfo.State.RUNNING) {
+                val emptyDb = it.progress.getBoolean(LoadDataWorker.DB_EMPTY_KEY, false)
+                if (!emptyDb) {
+                    binding.progressBarCircle.visibility = View.VISIBLE
+                    binding.progressBarLine.visibility = View.GONE
+                    binding.textViewLoadData.visibility = View.GONE
+                } else {
+                    binding.progressBarCircle.visibility = View.GONE
+                    binding.progressBarLine.visibility = View.VISIBLE
+                }
+            }
+            if (it.state == WorkInfo.State.SUCCEEDED) {
+                binding.progressBarCircle.visibility = View.GONE
+                binding.progressBarLine.visibility = View.GONE
+            }
+            if(internetStatusError){
+                binding.progressBarCircle.visibility = View.GONE
+                binding.progressBarLine.visibility = View.GONE
+                val styleAlert = it.progress.getInt(LoadDataWorker.INTERNET_PROBLEM_STYLE_KEY, -1)
+                if(styleAlert > 0){Snackbar.make(binding.recyclerNotes,R.string.internet_problem, Snackbar.LENGTH_SHORT).show()}
+                else{
+                    binding.textViewLoadData.visibility = View.VISIBLE
+                    binding.textViewLoadData.text = getString(R.string.internet_problem) }
+            }
+            if (sizeLoadData == 0){
+                binding.textViewLoadData.visibility = View.VISIBLE
+                binding.textViewLoadData.text = getString(R.string.not_load_data)
+            }
+
+        }
+    }
     private fun setupClickListener(){
         notesAdapter.onNotesItemClickListener ={
             findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToEditNotesFragment(it.id))

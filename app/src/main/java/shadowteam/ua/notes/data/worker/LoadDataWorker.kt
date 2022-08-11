@@ -58,7 +58,7 @@ class LoadDataWorker(
         val listNotesLoad = mutableListOf<Notes>()
         listNotesLoad.add(Notes(1, "EXAMPLE", "DESCRIPTION EXAMPLE", (10000000000..System.currentTimeMillis()).random()))
         listNotesLoad.add(Notes(2, "EXAMPLE_2", "DESCRIPTION EXAMPLE_2", (10000000000..System.currentTimeMillis()).random()))
-        listNotesLoad.add(Notes(3, "EXAMPLE_1", "DESCRIPTION EXAMPLE_3", (10000000000..System.currentTimeMillis()).random()))
+        listNotesLoad.add(Notes(3, "EXAMPLE_1", "DESCRIPTION EXAMPLE_3 LOOOOONNNNGGGGGGGG MASSAGE", (10000000000..System.currentTimeMillis()).random()))
         return listNotesLoad
     }
 

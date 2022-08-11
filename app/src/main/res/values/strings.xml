@@ -8,4 +8,5 @@
     <string name="internet_problem">Not Internet</string>
     <string name="time_first_template">%02d:%02d</string>
     <string name="time_two_template">%s.%s.%s</string>
+    <string name="add_notes">Add notes</string>
 </resources>

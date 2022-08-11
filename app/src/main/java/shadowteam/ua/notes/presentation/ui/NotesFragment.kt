@@ -74,7 +74,6 @@ class NotesFragment : Fragment() {
         setSwiperListener()
         setupClickListener()
         workerListener()
-        test()
         binding.floatingActionButton.setOnClickListener {
             if(binding.textViewLoadData.visibility != View.GONE){binding.textViewLoadData.visibility = View.GONE}
             viewModel.addNotes()
@@ -82,10 +81,6 @@ class NotesFragment : Fragment() {
         }
     }
 
-    private fun  test(){
-        val rnds = (0..10).random()
-        Log.i("test1", rnds.toString())
-    }
     private fun workerListener() {
         viewModel.liveWorkerState.observe(viewLifecycleOwner) {
             val internetStatusError =

@@ -14,17 +14,17 @@ interface NotesDao {
     fun getAllNotes():LiveData<List<NotesDb>>
 
     @Query("SELECT * FROM notes_table")
-    fun getAllNotesList():List<NotesDb>
+    suspend fun getAllNotesList():List<NotesDb>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNotes(notes: NotesDb)
+    suspend fun insertNotes(notes: NotesDb)
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertNotesList(notes: List<NotesDb>)
+    suspend fun insertNotesList(notes: List<NotesDb>)
 
     @Query("DELETE FROM notes_table WHERE id=:notesId")
-    fun deleteNotes(notesId: Int)
+    suspend fun deleteNotes(notesId: Int)
 
     @Query("SELECT * FROM notes_table WHERE id=:notesId LIMIT 1")
-     fun getNotesItem(notesId: Int): NotesDb
+    suspend fun getNotesItem(notesId: Int): NotesDb
 }

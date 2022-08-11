@@ -1,6 +1,8 @@
 package shadowteam.ua.notes.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
 import shadowteam.ua.notes.domain.usecase.AddNotesUseCase
 import shadowteam.ua.notes.domain.usecase.DeleteNotesUseCase
 import shadowteam.ua.notes.domain.usecase.GetNotesListUseCase
@@ -18,10 +20,13 @@ class NotesViewModel @Inject constructor(
     val liveWorkerState = loadDataUseCase()
 
     fun addNotes(){
-        addNotesUseCase.invoke()
+        viewModelScope.launch {
+            addNotesUseCase.invoke()
+        }
     }
 
     fun delNotes(id: Int){
-        deleteNotesUseCase(id)
+        viewModelScope.launch { deleteNotesUseCase(id) }
+
     }
 }

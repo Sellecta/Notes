@@ -7,7 +7,7 @@ import javax.inject.Inject
 class AddNotesUseCase @Inject constructor(
     private val repository: NotesRepository) {
 
-    operator fun invoke(){
+    suspend operator  fun invoke(){
         repository.addNotes()
     }
 }

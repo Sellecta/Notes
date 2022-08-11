@@ -1,6 +1,7 @@
 package shadowteam.ua.notes.data.repository
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import androidx.work.ExistingWorkPolicy
@@ -41,7 +42,7 @@ class NotesRepositoryImpl @Inject constructor(
       }
     }
 
-    override fun addNotes() {
+    override suspend fun addNotes() {
         val notes = Notes(
             AUTOGENERATE_ID,
             application.getString(R.string.default_title),
@@ -50,11 +51,11 @@ class NotesRepositoryImpl @Inject constructor(
         notesDao.insertNotes(mapper.mapNotesToNotesDb(notes))
     }
 
-    override fun deleteNotes(id: Int) {
+    override suspend fun deleteNotes(id: Int) {
         notesDao.deleteNotes(id)
     }
 
-    override fun getEditNotes(id: Int, title: String, desc: String) {
+    override suspend fun getEditNotes(id: Int, title: String, desc: String) {
         val notes = notesDao.getNotesItem(id)
         if(notes.title != title || notes.description !=desc){
             val newNotes =
@@ -63,7 +64,7 @@ class NotesRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getNotes(id: Int): Notes {
+    override suspend fun getNotes(id: Int): Notes {
         return mapper.mapNotesDbToEntity(notesDao.getNotesItem(id))
     }
 

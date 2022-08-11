@@ -62,6 +62,9 @@ class EditNotesFragment : Fragment() {
             binding.etName.setText(it.title)
             binding.etDesc.setText(it.description)
         }
+        viewModel.shouldCloseScreen.observe(viewLifecycleOwner){
+            findNavController().popBackStack()
+        }
     }
 
     private fun listenerClick(){
@@ -73,7 +76,6 @@ class EditNotesFragment : Fragment() {
                         title = binding.etName.text.toString(),
                         desc = binding.etDesc.text.toString()
                     )
-                    findNavController().popBackStack()
                     true
                 }
                 else -> false

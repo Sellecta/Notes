@@ -25,7 +25,8 @@
         android:layout_margin="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:focusable="true" />
+        android:focusable="true"
+        android:contentDescription="@string/add_notes" />
 
     <ProgressBar
         android:id="@+id/progressBarCircle"

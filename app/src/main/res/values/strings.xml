@@ -6,4 +6,6 @@
     <string name="default_title">New Notes</string>
     <string name="not_load_data">Not Notes</string>
     <string name="internet_problem">Not Internet</string>
+    <string name="time_first_template">%02d:%02d</string>
+    <string name="time_two_template">%s.%s.%s</string>
 </resources>

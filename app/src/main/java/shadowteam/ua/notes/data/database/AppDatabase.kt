@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import shadowteam.ua.notes.data.database.dao.NotesDao
 import shadowteam.ua.notes.data.database.model.NotesDb
 
-@Database(entities = [NotesDb::class], version = 1, exportSchema = false)
+@Database(entities = [NotesDb::class], version = 2, exportSchema = false)
 abstract class AppDatabase :RoomDatabase() {
 
     companion object {

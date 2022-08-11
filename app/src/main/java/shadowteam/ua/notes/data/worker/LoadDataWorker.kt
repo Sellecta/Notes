@@ -56,11 +56,13 @@ class LoadDataWorker(
             }
         }
         val listNotesLoad = mutableListOf<Notes>()
-//        listNotesLoad.add(Notes(1, "EXAMPLE", "DESCRIPTION EXAMPLE", "27.05.22"))
-//        listNotesLoad.add(Notes(2, "EXAMPLE_2", "DESCRIPTION EXAMPLE_2", "21.04.22"))
-//        listNotesLoad.add(Notes(3, "EXAMPLE_1", "DESCRIPTION EXAMPLE_3", "22.05.22"))
+        listNotesLoad.add(Notes(1, "EXAMPLE", "DESCRIPTION EXAMPLE", (10000000000..System.currentTimeMillis()).random()))
+        listNotesLoad.add(Notes(2, "EXAMPLE_2", "DESCRIPTION EXAMPLE_2", (10000000000..System.currentTimeMillis()).random()))
+        listNotesLoad.add(Notes(3, "EXAMPLE_1", "DESCRIPTION EXAMPLE_3", (10000000000..System.currentTimeMillis()).random()))
         return listNotesLoad
     }
+
+
 
     private fun checkInternet():Int{
                 var result = 0 // Returns connection type. 0: none; 1: mobile data; 2: wifi

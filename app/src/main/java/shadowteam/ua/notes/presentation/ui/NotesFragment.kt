@@ -1,9 +1,5 @@
 package shadowteam.ua.notes.presentation.ui
 
-import android.content.Context
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,14 +14,15 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkInfo
 import com.google.android.material.snackbar.Snackbar
 import shadowteam.ua.notes.R
-import shadowteam.ua.notes.data.database.AppDatabase
 import shadowteam.ua.notes.data.worker.LoadDataWorker
 import shadowteam.ua.notes.databinding.FragmentNotesBinding
 import shadowteam.ua.notes.presentation.application.NotesApplication
 import shadowteam.ua.notes.presentation.ui.adapter.NotesAdapter
 import shadowteam.ua.notes.presentation.viewmodel.NotesViewModel
 import shadowteam.ua.notes.presentation.viewmodel.ViewModelFactory
+import java.util.*
 import javax.inject.Inject
+import kotlin.random.Random.Default.nextInt
 
 
 class NotesFragment : Fragment() {
@@ -76,6 +73,7 @@ class NotesFragment : Fragment() {
         }
         setSwiperListener()
         setupClickListener()
+        workerListener()
         test()
         binding.floatingActionButton.setOnClickListener {
             if(binding.textViewLoadData.visibility != View.GONE){binding.textViewLoadData.visibility = View.GONE}
@@ -84,8 +82,11 @@ class NotesFragment : Fragment() {
         }
     }
 
-    private fun test() {
-
+    private fun  test(){
+        val rnds = (0..10).random()
+        Log.i("test1", rnds.toString())
+    }
+    private fun workerListener() {
         viewModel.liveWorkerState.observe(viewLifecycleOwner) {
             val internetStatusError =
             it.progress.getBoolean(LoadDataWorker.NOT_INTERNET_KEY, false)

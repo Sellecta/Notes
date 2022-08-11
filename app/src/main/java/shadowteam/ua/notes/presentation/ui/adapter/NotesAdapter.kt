@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import shadowteam.ua.notes.databinding.NotesItemBinding
 import shadowteam.ua.notes.domain.dataclass.Notes
+import java.util.*
 import javax.inject.Inject
 
 class NotesAdapter @Inject constructor(
@@ -26,7 +27,7 @@ class NotesAdapter @Inject constructor(
         with(holder.binding){
             textViewTitle.text = notes.title
             textViewDescription.text = notes.description
-            textViewTime.text = notes.data
+            textViewTime.text = notes.formatData
             root.setOnClickListener{
                 onNotesItemClickListener?.invoke(notes)
             }

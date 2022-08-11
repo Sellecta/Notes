@@ -10,7 +10,7 @@ import shadowteam.ua.notes.data.database.model.NotesDb
 @Dao
 interface NotesDao {
 
-    @Query("SELECT * FROM notes_table")
+    @Query("SELECT * FROM notes_table ORDER BY id DESC")
     fun getAllNotes():LiveData<List<NotesDb>>
 
     @Query("SELECT * FROM notes_table")

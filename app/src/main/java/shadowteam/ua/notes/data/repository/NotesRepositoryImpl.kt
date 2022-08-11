@@ -12,6 +12,7 @@ import shadowteam.ua.notes.data.mapper.NotesMapper
 import shadowteam.ua.notes.data.worker.LoadDataWorker
 import shadowteam.ua.notes.domain.dataclass.Notes
 import shadowteam.ua.notes.domain.domaininterface.NotesRepository
+import java.util.*
 import javax.inject.Inject
 
 class NotesRepositoryImpl @Inject constructor(
@@ -45,7 +46,7 @@ class NotesRepositoryImpl @Inject constructor(
             AUTOGENERATE_ID,
             application.getString(R.string.default_title),
             "",
-            "13:24")
+            System.currentTimeMillis())
         notesDao.insertNotes(mapper.mapNotesToNotesDb(notes))
     }
 
@@ -55,8 +56,11 @@ class NotesRepositoryImpl @Inject constructor(
 
     override fun getEditNotes(id: Int, title: String, desc: String) {
         val notes = notesDao.getNotesItem(id)
-        val newNotes = notes.copy(title = title, description = desc)
-        notesDao.insertNotes(newNotes)
+        if(notes.title != title || notes.description !=desc){
+            val newNotes =
+                notes.copy(title = title, description = desc, data = System.currentTimeMillis())
+            notesDao.insertNotes(newNotes)
+        }
     }
 
     override fun getNotes(id: Int): Notes {

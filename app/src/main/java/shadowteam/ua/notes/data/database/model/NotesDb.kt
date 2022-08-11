@@ -2,6 +2,7 @@ package shadowteam.ua.notes.data.database.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.util.*
 
 @Entity(tableName = "notes_table")
 data class NotesDb(
@@ -10,5 +11,5 @@ data class NotesDb(
     val id: Int,
     val title: String,
     val description: String,
-    val data: String
+    val data: Long
 )

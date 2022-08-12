@@ -23,7 +23,7 @@ class NotesRepositoryImpl @Inject constructor(
 ) : NotesRepository {
 
     override fun loadData(): LiveData<WorkInfo> {
-        val workerRequest = LoadDataWorker.makeRequest()
+        val workerRequest = LoadDataWorker.makeRequest("5")
         val worker = WorkManager.getInstance(application)
         worker.enqueueUniqueWork(
             LoadDataWorker.NAME_WORKER,

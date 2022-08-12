@@ -13,7 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.WorkInfo
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import shadowteam.ua.notes.R
+import shadowteam.ua.notes.data.network.ApiFactory
 import shadowteam.ua.notes.data.worker.LoadDataWorker
 import shadowteam.ua.notes.databinding.FragmentNotesBinding
 import shadowteam.ua.notes.presentation.application.NotesApplication
@@ -118,6 +122,7 @@ class NotesFragment : Fragment() {
 
         }
     }
+
     private fun setupClickListener(){
         notesAdapter.onNotesItemClickListener ={
             findNavController().navigate(NotesFragmentDirections.actionNotesFragmentToEditNotesFragment(it.id))

@@ -7,26 +7,31 @@ import androidx.work.*
 import kotlinx.coroutines.delay
 import shadowteam.ua.notes.data.database.dao.NotesDao
 import shadowteam.ua.notes.data.mapper.NotesMapper
+import shadowteam.ua.notes.data.network.ApiService
 import shadowteam.ua.notes.domain.dataclass.Notes
 import javax.inject.Inject
 
 class LoadDataWorker(
     appContext: Context,
-    params: WorkerParameters,
+    private val params: WorkerParameters,
     private val notesDao: NotesDao,
-    private val mapper: NotesMapper
+    private val mapper: NotesMapper,
+    private val apiService: ApiService
 ) :CoroutineWorker(appContext, params) {
 
     override suspend fun doWork(): Result {
         return try{
-            var countNoteDb = notesDao.getAllNotesList().size
-            val dbEmptyBoolean = workDataOf(DB_EMPTY_KEY to (countNoteDb > 0))
-            setProgress(dbEmptyBoolean)
-            val loadData = loadDataImitation()
-            if(loadData.isNotEmpty()){ notesDao.insertNotesList(loadData.map {
-                mapper.mapNotesToNotesDb(it) })}
-            countNoteDb = notesDao.getAllNotesList().size
-            Result.success(workDataOf(LOAD_DATA_KEY to countNoteDb))
+            params.inputData.getString(DELAY)?.let {delayTime ->
+                var countNoteDb = notesDao.getAllNotesList().size
+                val dbEmptyBoolean = workDataOf(DB_EMPTY_KEY to (countNoteDb > 0))
+                setProgress(dbEmptyBoolean)
+                val loadData = loadDataImitation(delayTime)
+                if(loadData.isNotEmpty()){ notesDao.insertNotesList(loadData.map {
+                    mapper.mapNotesToNotesDb(it) })}
+                countNoteDb = notesDao.getAllNotesList().size
+                Result.success(workDataOf(LOAD_DATA_KEY to countNoteDb))
+            }
+            Result.success()
         }catch (e:Exception){
             val countNoteDb = notesDao.getAllNotesList().size
             setProgress(workDataOf(NOT_INTERNET_KEY  to true, INTERNET_PROBLEM_STYLE_KEY to countNoteDb))
@@ -40,22 +45,16 @@ class LoadDataWorker(
     class Factory @Inject constructor(
         private val notesDao: NotesDao,
         private val mapper: NotesMapper,
+        private val apiService: ApiService
     ) : ChildWorkerFactory {
         override fun create(appContext: Context, params: WorkerParameters): ListenableWorker {
-            return LoadDataWorker(appContext, params, notesDao, mapper)
+            return LoadDataWorker(appContext, params, notesDao, mapper, apiService)
         }
     }
 
-    private suspend fun loadDataImitation() :List<Notes>{ //method Imitation load data retrofit...
-        var time = 0
-        while (time<5){
-            delay(1000)
-            time++
-            if(checkInternet() == 0){
-                throw Exception("NOT_INTERNET")
-            }
-        }
+    private suspend fun loadDataImitation(delay: String):List<Notes>{ //method Imitation load data retrofit...
         val listNotesLoad = mutableListOf<Notes>()
+        apiService.getNotesDelay(delay)
         listNotesLoad.add(Notes(1, "EXAMPLE", "DESCRIPTION EXAMPLE", (10000000000..System.currentTimeMillis()).random()))
         listNotesLoad.add(Notes(2, "EXAMPLE_2", "DESCRIPTION EXAMPLE_2", (10000000000..System.currentTimeMillis()).random()))
         listNotesLoad.add(Notes(3, "EXAMPLE_1", "DESCRIPTION EXAMPLE_3 LOOOOONNNNGGGGGGGG MASSAGE", (10000000000..System.currentTimeMillis()).random()))
@@ -86,8 +85,10 @@ class LoadDataWorker(
         const val NOT_INTERNET_KEY = "not_internet"
         const val INTERNET_PROBLEM_STYLE_KEY = "internet_problem_style"
         const val LOAD_DATA_KEY = "load_data_end"
-        fun makeRequest():OneTimeWorkRequest{
+        private const val DELAY = "delay"
+        fun makeRequest(delay: String):OneTimeWorkRequest{
             return OneTimeWorkRequestBuilder<LoadDataWorker>()
+                .setInputData(workDataOf(DELAY to delay))
                 .build()
         }
     }
